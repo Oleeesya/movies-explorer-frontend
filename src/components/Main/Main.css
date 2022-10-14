@@ -1,0 +1,16 @@
+.main {
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+@media(max-width: 768px) {
+    .main {
+        max-width: 768px;
+    }
+}
+
+@media(max-width: 320px) {
+    .main {
+        max-width: 292px;
+    }
+}

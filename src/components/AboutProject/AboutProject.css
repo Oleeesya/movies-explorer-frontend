@@ -1,0 +1,147 @@
+.aboutProject {
+    box-sizing: border-box;
+    max-width: 1140px;
+    margin: 110px auto 141px;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.aboutProject__title {
+    padding: 0 0 23px;
+    border-bottom: 1px solid #000;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 26.63px;
+    margin: 0 0 70px;
+}
+
+.aboutProject__wrapper {
+    display: flex;
+    column-gap: 40px;
+    margin-bottom: 110px;
+}
+
+.aboutProject__wrapper-title {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24.2px;
+    margin: 0;
+}
+
+.aboutProject__description {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    margin: 26px 0 0;
+}
+
+.aboutProject__time {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+}
+
+.aboutProject__time_type_backend {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    padding: 9px 0 10px;
+    background: #3456F3;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.aboutProject__time_title_backend {
+    position: absolute;
+    top: 45px;
+    color: #A0A0A0;
+}
+
+.aboutProject__time_type_frontend {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    padding: 9px 0;
+    background: #F2F2F2;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.aboutProject__time_title_frontend {
+    position: absolute;
+    top: 45px;
+    color: #A0A0A0;
+}
+
+@media(max-width: 768px) {
+    .aboutProject {
+        max-width: 668px;
+        margin: 90px auto 121px;
+    }
+
+    .aboutProject__description {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 18px;
+        margin-top: 22px;
+    }
+
+    .aboutProject__wrapper {
+        margin-bottom: 93px;
+    }
+
+    .aboutProject__time {
+        grid-template-columns: 1fr 3.771fr;
+    }
+}
+
+@media(max-width: 320px) {
+    .aboutProject {
+        margin: 70px auto 93px;
+    }
+
+    .aboutProject__title {
+        font-size: 18px;
+        line-height: 21.78px;
+        padding-bottom: 28px;
+        margin-bottom: 60px;
+    }
+
+    .aboutProject__wrapper {
+        flex-wrap: wrap;
+        row-gap: 56px;
+        margin-bottom: 60px;
+    }
+
+    .aboutProject__wrapper-title {
+        font-size: 18px;
+        line-height: 21.78px;
+    }
+
+    .aboutProject__description {
+        margin-top: 16px;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .aboutProject__time_type_backend {
+        font-size: 11px;
+        line-height: 13.31px;
+        padding: 11px 0;
+    }
+
+    .aboutProject__time_type_frontend {
+        font-size: 11px;
+        line-height: 13.31px;
+        padding: 11px 0;
+    }
+
+    .aboutProject__time_title_backend {
+        line-height: 12.74px;
+    }
+
+    .aboutProject__time_title_frontend {
+        line-height: 12.74px;
+    }
+}

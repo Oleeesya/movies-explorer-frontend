@@ -1,0 +1,17 @@
+.movies {
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0;
+}
+
+@media(max-width: 768px) {
+    .movies {
+        max-width: 708px;
+    }
+}
+
+@media(max-width: 320px) {
+    .movies {
+        max-width: 300px;
+    }
+}

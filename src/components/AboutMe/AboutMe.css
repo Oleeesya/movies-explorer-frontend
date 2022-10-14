@@ -1,0 +1,126 @@
+.aboutMe {
+    box-sizing: border-box;
+    max-width: 1140px;
+    margin: 110px auto 100px;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.aboutMe__title {
+    padding: 0 0 23px;
+    border-bottom: 1px solid #000;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 26.63px;
+    margin: 0 0 66px;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.aboutMe__wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 40px;
+    justify-content: space-between;
+}
+
+.aboutMe__wrapper-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.aboutMe__name {
+    font-weight: 400;
+    font-size: 50px;
+    line-height: 58px;
+    margin: 0;
+}
+
+.aboutMe__profession {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+    margin: 18px 0 26px;
+}
+
+.aboutMe__hobby {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    margin: 0;
+}
+
+.aboutMe__network {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16.94px;
+    margin: 0;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.aboutMe__network-title {
+    margin: 0;
+}
+
+.aboutMe__foto {
+    width: 100%;
+}
+
+@media(max-width: 880px) {
+    .aboutMe {
+        max-width: 668px;
+        margin: 90px auto;
+    }
+
+    .aboutMe__name {
+        font-size: 40px;
+        line-height: 40px;
+    }
+
+    .aboutMe__profession {
+        margin: 16px 0 20px;
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .aboutMe__hobby {
+        font-size: 12px;
+        line-height: 18px;
+    }
+}
+
+@media(max-width: 320px) {
+    .aboutMe {
+        margin-top: 70px;
+    }
+
+    .aboutMe__title {
+        font-size: 18px;
+        line-height: 21.78px;
+        padding-bottom: 28px;
+        margin-bottom: 60px;
+    }
+
+    .aboutMe__wrapper {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .aboutMe__foto {
+        margin-bottom: 40px;
+        font-size: 30px;
+        line-height: 36.31px;
+    }
+
+    .aboutMe__profession {
+        font-size: 11px;
+        line-height: 16px;
+        margin: 20px 0;
+    }
+
+    .aboutMe__network {
+        margin: 40px 0 70px;
+    }
+}
