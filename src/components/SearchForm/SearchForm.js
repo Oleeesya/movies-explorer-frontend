@@ -5,10 +5,10 @@ import './SearchForm.css';
 function SearchForm() {
     return (
         <>
-            <div className="searchForm">
-                <input className="searchForm__input" type="text" placeholder='Фильм' />
+            <form className="searchForm">
+                <input className="searchForm__input" type="text" placeholder='Фильм' required/>
                 <button className="searchForm__btn">Найти</button>
-            </div>
+            </form>
             <FilterCheckbox />
         </>
     );

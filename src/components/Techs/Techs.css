@@ -4,6 +4,7 @@
     padding: 100px 70px;
     font-family: Inter, Arial, sans-serif;
     background: #F5F5F5;
+    max-width: 1280px;
 }
 
 .techs__title {
@@ -54,11 +55,13 @@
 
 @media(max-width: 768px) {
     .techs {
-        padding: 90px 0;
+        max-width: 768px;
+        padding: 90px 10px;
     }
 
     .techs__title {
-        margin-bottom: 80px;
+        margin: 0 auto 80px;
+        max-width: 668px;
     }
 
     .techs__wrapper-description {
@@ -83,8 +86,9 @@
 
 @media(max-width: 320px) {
     .techs {
-        background: #fff;
-        padding: 70px 0;
+        background: inherit;
+        max-width: 294px;
+        padding: 70px 5px;
     }
 
     .techs__box {

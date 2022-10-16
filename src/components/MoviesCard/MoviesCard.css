@@ -6,6 +6,11 @@
     background-size: 100%;
     object-fit: cover;
     width: 100%;
+    border-radius: 6px;
+}
+
+.moviesCard__image_hover:hover {
+    cursor: pointer;
 }
 
 .moviesCard__saved {
@@ -22,6 +27,10 @@
     line-height: 9px;
     cursor: pointer;
     transition: 0.2s;
+}
+
+.moviesCard__saved_none {
+    display: none;
 }
 
 .moviesCard__saved:hover {
@@ -41,6 +50,32 @@
     background-image: url(../../images/save.svg);
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.moviesCard__remove {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    width: 21px;
+    height: 21px;
+    border-radius: 30px;
+    border: none;
+    background: #EE3465;
+    background-image: url(../../images/remove.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.moviesCard__remove_none {
+    display: none;
+    transition: 0.2s;
+}
+
+.moviesCard__remove:hover {
+    opacity: 0.8;
+    transition: 0.2s;
 }
 
 .moviesCard__description {

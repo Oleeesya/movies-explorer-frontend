@@ -1,7 +1,8 @@
 .aboutProject {
     box-sizing: border-box;
-    max-width: 1140px;
+    max-width: 1280px;
     margin: 110px auto 141px;
+    padding: 70px;
     font-family: Inter, Arial, sans-serif;
 }
 
@@ -76,8 +77,9 @@
 
 @media(max-width: 768px) {
     .aboutProject {
-        max-width: 668px;
+        max-width: 688px;
         margin: 90px auto 121px;
+        padding: 0 10px;
     }
 
     .aboutProject__description {
@@ -98,6 +100,8 @@
 
 @media(max-width: 320px) {
     .aboutProject {
+        max-width: 294px;
+        padding: 0 5px;
         margin: 70px auto 93px;
     }
 

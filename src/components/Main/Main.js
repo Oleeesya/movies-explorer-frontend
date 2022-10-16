@@ -22,11 +22,13 @@ function Main(props) {
                     <button className='header__login' onClick={props.handleClickLogin}>Войти</button>
                 </div>
             </Header>
-            <Promo />
-            <AboutProject />
-            <Techs />
-            <AboutMe openInNewTab={openInNewTab} />
-            <Portfolio />
+            <main className='main__content'>
+                <Promo />
+                <AboutProject />
+                <Techs />
+                <AboutMe openInNewTab={openInNewTab} />
+                <Portfolio />
+            </main>
             <Footer openInNewTab={openInNewTab} />
         </div>
     );

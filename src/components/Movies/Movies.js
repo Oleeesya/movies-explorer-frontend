@@ -36,11 +36,13 @@ function Movies(props) {
                 <button className={`${!mobile ? 'header__menu-mobile' : 'header__menu-mobile_status_opened'}`}
                     onClick={handleClickMenu}></button>
             </Header>
-            <SearchForm />
-            <Preloader />
-            <MoviesCardList movies={props.movies}>
-                <button className='moviesCardList__btn-more'>Ещё</button>
-            </MoviesCardList>
+            <main className='movies__content'>
+                <SearchForm />
+                <Preloader />
+                <MoviesCardList movies={props.movies}>
+                    <button className='moviesCardList__btn-more'>Ещё</button>
+                </MoviesCardList>
+            </main>
             <Footer />
         </div>
     );

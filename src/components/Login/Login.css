@@ -1,17 +1,21 @@
 .login {
+    box-sizing: border-box;
     max-width: 396px;
     margin: 0 auto;
 }
 
 @media(max-width: 768px) {
     .login {
+        max-width: 416px;
+        padding: 0 10px;
         margin-bottom: 265px;
     }
 }
 
 @media(max-width: 320px) {
     .login {
-        max-width: 260px;
+        max-width: 270px;
+        padding: 0 5px;
         margin-bottom: 59px;
     }
 }

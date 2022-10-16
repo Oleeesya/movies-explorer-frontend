@@ -1,6 +1,8 @@
 .searchForm {
-    max-width: 1140px;
+    box-sizing: border-box;
+    max-width: 1160px;
     margin: 80px auto 0;
+    padding: 0 10px;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -42,8 +44,18 @@
     transition: 0.2s;
 }
 
+@media(max-width: 768px) {
+    .searchForm {
+        max-width: 728px;
+        padding: 0 10px;
+        margin-top: 81px;
+    }
+}
+
 @media(max-width: 320px) {
     .searchForm {
+        max-width: 302px;
+        padding: 0 5px;
         margin-top: 81px;
     }
 
@@ -52,5 +64,4 @@
         font-size: 12px;
         line-height: 18px;
     }
-
 }

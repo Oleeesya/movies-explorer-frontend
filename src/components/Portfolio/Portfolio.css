@@ -1,6 +1,7 @@
 .portfolio {
     box-sizing: border-box;
-    max-width: 1140px;
+    max-width: 1280px;
+    padding: 0 70px;
     margin: 0 auto;
 }
 
@@ -44,6 +45,7 @@
     padding: 0;
     cursor: pointer;
     transition: 0.2s;
+    text-align: start;
 }
 
 .portfolio__link:hover {
@@ -65,7 +67,8 @@
 
 @media(max-width: 768px) {
     .portfolio {
-        max-width: 668px;
+        max-width: 688px;
+        padding: 0 10px;
     }
 
     .portfolio__link {
@@ -81,6 +84,8 @@
 
 @media(max-width:320px) {
     .portfolio {
+        max-width: 302px;
+        padding: 0 5px;
         margin-bottom: 51px;
     }
 

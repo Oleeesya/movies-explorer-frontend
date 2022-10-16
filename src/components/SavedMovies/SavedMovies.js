@@ -38,9 +38,11 @@ function SavedMovies(props) {
                 <button className={`${!mobile ? 'header__menu-mobile' : 'header__menu-mobile_status_opened'}`}
                     onClick={handleClickMenu}></button>
             </Header>
-            <SearchForm />
-            <Preloader />
-            <MoviesCardList movies={props.movies} />
+            <main className='savedMovies__content'>
+                <SearchForm />
+                <Preloader />
+                <MoviesCardList movies={props.movies} />
+            </main>
             <Footer />
         </div>
     );

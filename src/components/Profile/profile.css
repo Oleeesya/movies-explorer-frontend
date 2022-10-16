@@ -57,13 +57,13 @@
 
 @media(max-width: 768px) {
     .profile {
-        max-width: 708px;
+        max-width: 768px;
     }
 }
 
 @media(max-width: 320px) {
     .profile {
-        max-width: 260px;
+        max-width: 320px;
     }
 
     .profile__exite {

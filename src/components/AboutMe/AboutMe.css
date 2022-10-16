@@ -1,6 +1,7 @@
 .aboutMe {
     box-sizing: border-box;
-    max-width: 1140px;
+    max-width: 1280px;
+    padding: 0 70px;
     margin: 110px auto 100px;
     font-family: Inter, Arial, sans-serif;
 }
@@ -68,9 +69,10 @@
     width: 100%;
 }
 
-@media(max-width: 880px) {
+@media(max-width: 768px) {
     .aboutMe {
-        max-width: 668px;
+        max-width: 688px;
+        padding: 0 10px;
         margin: 90px auto;
     }
 
@@ -93,6 +95,8 @@
 
 @media(max-width: 320px) {
     .aboutMe {
+        max-width: 302px;
+        padding: 0 5px;
         margin-top: 70px;
     }
 
