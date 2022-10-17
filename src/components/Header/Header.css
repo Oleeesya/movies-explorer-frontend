@@ -158,6 +158,7 @@
 
 .header__profile {
     background-image: url(../../images/profile.svg);
+    background-position: center;
     box-sizing: border-box;
     padding: 0;
     width: 100px;
