@@ -1,0 +1,66 @@
+.register {
+    box-sizing: border-box;
+    max-width: 396px;
+    margin: 0 auto;
+}
+
+.register-login {
+    display: flex;
+    justify-content: center;
+}
+
+.register-login__btn {
+    background: none;
+    border: none;
+    bottom: -33px;
+    padding: 0;
+    position: absolute;
+    cursor: pointer;
+    font-family: Inter, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 16.94px;
+    font-weight: 400;
+    color: #A0A0A0;
+    transition: 0.2s;
+}
+
+.register-login__btn:hover {
+    opacity: 0.7;
+    transition: 0.2s;
+}
+
+.register-login__input {
+    font-family: Inter, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 16.94px;
+    font-weight: 400;
+    color: #3456F3;
+    margin-left: 6px;
+}
+
+@media(max-width: 768px) {
+    .register {
+        max-width: 416px;
+        padding: 0 10px;
+        margin-bottom: 265px;
+    }
+}
+
+@media(max-width: 320px) {
+    .register {
+        max-width: 270px;
+        padding: 0 5px;
+        margin-bottom: 59px;
+    }
+
+    .register-login__btn {
+        font-size: 12px;
+        line-height: 14.52px;
+        bottom: -28.52px;
+    }
+
+    .register-login__input {
+        font-size: 12px;
+        line-height: 14.52px;
+    }
+}

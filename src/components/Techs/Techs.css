@@ -1,0 +1,116 @@
+.techs {
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 100px 70px;
+    font-family: Inter, Arial, sans-serif;
+    background: #F5F5F5;
+    max-width: 1280px;
+}
+
+.techs__title {
+    padding: 0 0 23px;
+    border-bottom: 1px solid #000;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 26.63px;
+    margin: 0 0 90px;
+}
+
+.techs__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.techs__wrapper-header {
+    font-weight: 400;
+    font-size: 50px;
+    line-height: 58px;
+    margin: 0;
+}
+
+.techs__wrapper-description {
+    margin: 26px auto 100px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.techs__box {
+    display: flex;
+    column-gap: 10px;
+}
+
+.techs__box-item {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16.94px;
+    padding: 21px 0;
+    background: #E8E8E8;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    width: 90px;
+}
+
+@media(max-width: 768px) {
+    .techs {
+        max-width: 768px;
+        padding: 90px 10px;
+    }
+
+    .techs__title {
+        margin: 0 auto 80px;
+        max-width: 668px;
+    }
+
+    .techs__wrapper-description {
+        font-size: 12px;
+        line-height: 18px;
+        max-width: 460px;
+        text-align: center;
+        margin: 22px auto 83px;
+    }
+
+    .techs__box {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    .techs__box-item {
+        font-size: 12px;
+        line-height: 14.52px;
+        width: 84px;
+    }
+}
+
+@media(max-width: 320px) {
+    .techs {
+        background: inherit;
+        max-width: 294px;
+        padding: 70px 5px;
+    }
+
+    .techs__box {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .techs__title {
+        font-size: 18px;
+        line-height: 21.78px;
+        padding-bottom: 23px;
+        margin-bottom: 60px;
+    }
+
+    .techs__wrapper-header {
+        font-size: 30px;
+        line-height: 36.31px;
+    }
+
+    .techs__wrapper-description {
+        font-size: 11px;
+        line-height: 16px;
+        margin: 24px auto 50px;
+    }
+}

@@ -1,0 +1,18 @@
+.savedMovies {
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0;
+    background-color: #FAFAFA;
+}
+
+@media(max-width: 768px) {
+    .savedMovies {
+        max-width: 768px;
+    }
+}
+
+@media(max-width: 320px) {
+    .savedMovies {
+        max-width: 320px;
+    }
+}
