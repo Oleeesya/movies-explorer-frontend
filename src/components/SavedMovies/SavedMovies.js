@@ -39,9 +39,10 @@ function SavedMovies(props) {
                     onClick={handleClickMenu}></button>
             </Header>
             <main className='savedMovies__content'>
-                <SearchForm />
+                <SearchForm shortFilm={props.shortFilm} handleShortFilm={props.handleShortFilm} handleSearchMovies={props.handleSearchMovies} />
                 <Preloader />
-                <MoviesCardList movies={props.movies} />
+                <MoviesCardList movies={props.savedMovies} setSavedMovies={props.setSavedMovies}
+                    handleSaveClick={props.handleSaveClick} dimensions={props.dimensions} shortFilm={props.shortFilm} />
             </main>
             <Footer />
         </div>

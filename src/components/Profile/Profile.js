@@ -2,25 +2,67 @@ import React from 'react';
 import Header from '../Header/Header';
 import './profile.css';
 import Form from '../Form/Form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { currentUserContext } from '../contexts/CurrentUserContext';
+import { useHistory } from 'react-router-dom';
+
+const { emailRegex } = require('../../utils/const')
 
 function Profile(props) {
-
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    let userContext = React.useContext(currentUserContext);
+    const [name, setName] = useState(userContext.name || '');
+    const [email, setEmail] = useState(userContext.email || '');
     const [mobile, setMobile] = useState(false);
-    const [profile, setProfile] = useState(false)
+    const [profile, setProfile] = useState(false);
+    const history = useHistory();
 
-    const onRegister = (e) => {
-        e.preventDefault();
-    }
+    const {
+        register,
+        formState: { errors, isValid },
+        handleSubmit,
+        setValue
+    } = useForm({
+        mode: 'all',
+        reValidateMode: 'onChange',
+    });
+
+    useEffect(() => {
+        setName(userContext.name);
+        setEmail(userContext.email);
+    }, [userContext]);
 
     const handleClickMenu = () => {
         setMobile(!mobile);
     }
 
-    const handleEditProfile = () => {
-        setProfile(true)
+    const handleEdit = () => {
+        setProfile(true);
+        setValue('name', userContext.name);
+        setValue('email', userContext.email)
+    }
+
+    const handleEditProfile = ({ name, email }) => {
+        props.handleEditUserInfo({ name, email });
+    }
+
+    const handleSignOut = () => {
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('userLogged');
+
+        props.setToken('');
+        props.setloggedIn(false);
+        history.push('/');
+    }
+
+    const onInputNameHandle = (e) => {
+        setName(e.target.value)
+        props.setMessageError("")
+    }
+
+    const onInputEmailHandle = (e) => {
+        setEmail(e.target.value)
+        props.setMessageError("")
     }
 
     return (
@@ -42,24 +84,45 @@ function Profile(props) {
             </Header>
             <main className='profile__content'>
                 <h2 className='header__title header__tytle_profile'>Привет, {name}!</h2>
-                <Form buttonText='Сохранить' onSubmit={onRegister} name='profile' profile={profile}>
+                <Form buttonText='Сохранить' name='profile' profile={profile} onSubmit={handleSubmit(handleEditProfile)}
+                    messageerror={props.messageerror} >
                     <div>
                         <div className='form__input-wrapper form__input_border_active'>
-                            <input className="form__input form__input_type_profile" required id="name" name="name" type="name" placeholder={name}
-                                value={name} onChange={({ target }) => setName(target.value)} autoComplete="off" />
+                            <input {...register('name', { required: true, maxLength: 30, minLength: 2, type: String })}
+                                className="form__input form__input_type_profile" required id="name" name="name" type="name" placeholder={name}
+                                value={name || ''} onInput={onInputNameHandle} autoComplete="off"
+                                disabled={`${profile ? '' : 'desabled'}`}
+                            />
                             <span className='form__placeholder form__placeholder_type_profile'>Имя</span>
+                            {errors.name && <p className='form__error form__error_profile'>Длина строки должна быть не менее 2 и не более 30 символов</p>}
+
                         </div>
                         <div className='form__input-wrapper'>
-                            <input className="form__input form__input_type_profile" required id="email" name="email" type="text" placeholder={email}
-                                value={email} onChange={({ target }) => setEmail(target.value)} autoComplete="off" />
+                            <input {...register('email', { required: true, type: String, pattern: emailRegex })}
+                                className="form__input form__input_type_profile" required id="email" name="email" type="text" placeholder={email}
+                                value={email || ''} onInput={onInputEmailHandle} autoComplete="off"
+                                disabled={`${profile ? '' : 'desabled'}`}
+                            />
                             <span className='form__placeholder form__placeholder_type_profile'>Почта</span>
+                            {errors.email && <p className='form__error form__error_profile'>Неправильный формат почты</p>}
+
                         </div>
                     </div>
 
                     <button className={`${profile ? 'profile__edit-btn_none' : 'profile__edit-btn'}`}
-                        onClick={handleEditProfile} type="button">Редактировать</button>
+                        onClick={handleEdit}
+                        type="button">Редактировать
+                    </button>
+
+                    <button type="submit" className={`${profile && props.messageerror ? 'form__submit form__submit_type_profile form__submit_not-valid' :
+                        profile && isValid ? 'form__submit form__submit_type_profile' :
+                            profile && !isValid ? 'form__submit form__submit_type_profile form__submit_not-valid' :
+                                'form__submit_none'}`}
+                        disabled={`${isValid ? '' : 'desabled'}`} >Сохранить
+                    </button>
+
                     <div className={`${profile ? 'profile__exite_none' : 'profile__exite'}`}>
-                        <button className="profile__exite-btn" onClick={props.handleClickMain} type="button">Выйти из аккаунта
+                        <button className="profile__exite-btn" onClick={handleSignOut} type="button">Выйти из аккаунта
                         </button>
                     </div>
                 </Form>

@@ -46,6 +46,7 @@
     padding: 0;
     border-bottom: none;
     text-align: end;
+    background: none;
 }
 
 .form__input-wrapper {
@@ -76,6 +77,10 @@
     font-weight: 400;
     margin: 0;
     position: absolute;
+}
+
+.form__error_profile {
+    margin-top: 24px;
 }
 
 .form__placeholder {
@@ -110,6 +115,11 @@
     transition: 0.2s;
 }
 
+.form__submit_not-valid {
+    opacity: 0.5;
+    background-color: #a0a0a0;
+}
+
 .form__submit_type_profile {
     max-width: 410px;
     margin-top: 223px;
@@ -122,6 +132,12 @@
 .form__submit:hover {
     opacity: 0.8;
     transition: 0.2s;
+}
+
+.form__submit_not-valid:hover {
+    opacity: 0.5;
+    transition: 0;
+    cursor: inherit;
 }
 
 .form_type_input {
@@ -158,10 +174,15 @@
     margin: 0 auto;
     display: none;
     margin-bottom: 20px;
+    color: #FF004C;
 }
 
 .form__error-message_active {
-    display: block;
+    display: flex;
+    position: absolute;
+    bottom: 50px;
+    justify-content: center;
+    width: 100%;
 }
 
 @media(max-width: 768px) {
