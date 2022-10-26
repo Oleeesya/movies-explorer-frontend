@@ -3,6 +3,10 @@ import './Footer.css';
 
 function Footer(props) {
 
+    const openInNewTab = url => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
+
     return (
         <footer className="footer">
             <p className='footer__title'>
@@ -13,12 +17,12 @@ function Footer(props) {
                 <nav>
                     <ul className='footer__list'>
                         <li className='footer__item'>
-                            <button className='footer__link' onClick={() => props.openInNewTab('https://practicum.yandex.ru/')}>
+                            <button className='footer__link' onClick={() => openInNewTab('https://practicum.yandex.ru/')}>
                                 <p className='footer__link-title'>Яндекс.Практикум</p>
                             </button>
                         </li>
                         <li className='footer__item'>
-                            <button className='footer__link' onClick={() => props.openInNewTab('https://github.com/Oleeesya')}>
+                            <button className='footer__link' onClick={() => openInNewTab('https://github.com/Oleeesya')}>
                                 <p className='footer__link-title'>Github</p>
                             </button>
                         </li>

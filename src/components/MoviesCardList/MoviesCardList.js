@@ -57,7 +57,7 @@ function MoviesCardList(props) {
                     return (
                         <MoviesCard key={movie.id} link={movie.image.url} name={movie.nameRU} duration={movie.duration}
                             id={movie.movieId} setSavedMovies={props.setSavedMovies} movies={props.movies}
-                            handleSaveClick={props.handleSaveClick} shortFilm={props.shortFilm}
+                            handleSaveClick={props.handleSaveClick} shortFilm={props.shortFilm} trailerLink={movie.trailerLink}
                         />
                     )
                 })

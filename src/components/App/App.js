@@ -195,16 +195,6 @@ function App() {
       window.removeEventListener('resize', handleResize)
     }
   })
-  // console.log(localStorage)
-  // localStorage.removeItem('mov')
-  // localStorage.removeItem('save-mov')
-  // localStorage.removeItem('save-short-mov')
-  // localStorage.removeItem('short-mov')
-  // localStorage.removeItem('toggle')
-  // localStorage.removeItem('title-mov')
-  // localStorage.removeItem('save-title-mov')
-  // localStorage.removeItem('jwt')
-  // localStorage.removeItem('userLogged')
 
   const handleAuthorize = (email, password) => {
     auth.authorize(email, password)

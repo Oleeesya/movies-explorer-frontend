@@ -18,10 +18,6 @@ function Main(props) {
         setMobile(!mobile);
     }
 
-    const openInNewTab = url => {
-        window.open(url, '_blank', 'noopener,noreferrer');
-    };
-
     return (
         <div className="main">
             {props.loggedIn ? <Header handleClickMain={props.handleClickMain}>
@@ -52,10 +48,10 @@ function Main(props) {
                 <Promo />
                 <AboutProject />
                 <Techs />
-                <AboutMe openInNewTab={openInNewTab} />
+                <AboutMe />
                 <Portfolio />
             </main>
-            <Footer openInNewTab={openInNewTab} />
+            <Footer />
         </div>
     );
 }

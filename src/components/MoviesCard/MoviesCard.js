@@ -96,6 +96,10 @@ function MoviesCard(props) {
         });
     })
 
+    const openInNewTab = url => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
+
     return (
         <article className="moviesCard">
             <button className={`${save && history.location.pathname === '/movies' ? 'moviesCard__saved_active' :
@@ -107,9 +111,11 @@ function MoviesCard(props) {
                 : 'moviesCard__remove_none'}`}
                 type='button' onMouseOver={handleRemoveOver} onMouseOut={handleDeleteRemoveOver} onClick={handleRemoveMovie}
                 titlemovie={props.name}></button>
-            <img className={`${history.location.pathname === '/saved-movies' ? 'moviesCard__image_hover moviesCard__image' : 'moviesCard__image'}`}
+            <img className='moviesCard__image_hover moviesCard__image'
                 src={'https://api.nomoreparties.co/' + props.link} alt={props.name}
-                onMouseOver={handleRemoveOver} onMouseOut={handleDeleteRemoveOver} />
+                onMouseOver={handleRemoveOver} onMouseOut={handleDeleteRemoveOver}
+                onClick={() => openInNewTab(props.trailerLink)}
+            />
             <div className="moviesCard__description">
                 <h2 className="moviesCard__title">{props.name}</h2>
                 <span className="moviesCard__duration">{`${minutes === 0 ? hour + 'ч' : hour === 0 ? minutes + ' м' :
