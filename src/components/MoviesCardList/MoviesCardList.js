@@ -10,10 +10,10 @@ function MoviesCardList(props) {
     const [showMore, setShowMore] = useState(false);
 
     const getInitialCount = () => {
-        if (props.dimensions.width > 768) {
+        if (props.dimensions.width > SCREEN_SIZE1) {
             return INIT_CARD_COUNT1
         }
-        else if (props.dimensions.width > 480) {
+        else if (props.dimensions.width > SCREEN_SIZE2) {
             return INIT_CARD_COUNT2
         }
         else {
