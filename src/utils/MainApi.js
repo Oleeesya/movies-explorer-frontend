@@ -79,8 +79,8 @@ export class MainApi {
 
 const mainApi = new MainApi(
     {
-        // url: 'https://api.domain.movies.nomoredomains.icu',
-        url: 'http://localhost:3000',
+        url: 'https://api.domain.movies.nomoredomains.icu',
+        // url: 'http://localhost:3000',
 
         header: {
             'Content-Type': 'application/json',
