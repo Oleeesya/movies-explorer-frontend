@@ -15,6 +15,9 @@ function Profile(props) {
     const [email, setEmail] = useState(userContext.email || '');
     const [mobile, setMobile] = useState(false);
     const [profile, setProfile] = useState(false);
+    const [isOldName, setIsOldName] = useState(true);
+    const [isOldEmail, setIsOldEmail] = useState(true);
+    const [isStatus, setStatus] = useState(false);
     const history = useHistory();
 
     const {
@@ -39,30 +42,54 @@ function Profile(props) {
     const handleEdit = () => {
         setProfile(true);
         setValue('name', userContext.name);
-        setValue('email', userContext.email)
+        setValue('email', userContext.email);
+        setIsOldName(true);
+        setIsOldEmail(true);
+        setStatus(false);
     }
 
     const handleEditProfile = ({ name, email }) => {
         props.handleEditUserInfo({ name, email });
+        setStatus(true);
+        setProfile(false);
     }
 
     const handleSignOut = () => {
         localStorage.removeItem('jwt');
         localStorage.removeItem('userLogged');
+        localStorage.removeItem('save-short-mov');
+        localStorage.removeItem('mov');
+        localStorage.removeItem('save-mov');
+        localStorage.removeItem('short-mov');
+        localStorage.removeItem('title-mov');
+        localStorage.removeItem('toggle');
+        props.setMovies([])
 
+        props.setShortFilm(false);
         props.setToken('');
         props.setloggedIn(false);
         history.push('/');
     }
 
     const onInputNameHandle = (e) => {
-        setName(e.target.value)
-        props.setMessageError("")
+        if (e.target.value === userContext.name) {
+            setIsOldName(true);
+        } else {
+            setIsOldName(false);
+        }
+        setName(e.target.value);
+        props.setMessageError("");
     }
 
     const onInputEmailHandle = (e) => {
-        setEmail(e.target.value)
-        props.setMessageError("")
+        if (e.target.value === userContext.email) {
+            setIsOldEmail(true);
+
+        } else {
+            setIsOldEmail(false);
+        }
+        setEmail(e.target.value);
+        props.setMessageError("");
     }
 
     return (
@@ -109,16 +136,20 @@ function Profile(props) {
                         </div>
                     </div>
 
+                    <span className={`${isStatus ? 'form__changed-message form__changed-message_active' : 'form__changed-message'}`}
+                    >{`${isStatus ? 'Профиль успешно изменен!' : ''}`}
+                    </span>
+
                     <button className={`${profile ? 'profile__edit-btn_none' : 'profile__edit-btn'}`}
                         onClick={handleEdit}
                         type="button">Редактировать
                     </button>
 
                     <button type="submit" className={`${profile && props.messageerror ? 'form__submit form__submit_type_profile form__submit_not-valid' :
-                        profile && isValid ? 'form__submit form__submit_type_profile' :
-                            profile && !isValid ? 'form__submit form__submit_type_profile form__submit_not-valid' :
+                        profile && isValid && (!isOldName || !isOldEmail) ? 'form__submit form__submit_type_profile' :
+                            profile && (!isValid || (isOldName && isOldEmail)) ? 'form__submit form__submit_type_profile form__submit_not-valid' :
                                 'form__submit_none'}`}
-                        disabled={`${isValid ? '' : 'desabled'}`} >Сохранить
+                        disabled={`${isValid && (!isOldName || !isOldEmail) ? '' : 'desabled'}`} >Сохранить
                     </button>
 
                     <div className={`${profile ? 'profile__exite_none' : 'profile__exite'}`}>

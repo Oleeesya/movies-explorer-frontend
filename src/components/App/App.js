@@ -15,7 +15,8 @@ import NotFound from '../NotFound/NotFound';
 import './App.css';
 import ProtectedRoute from "../ProtectedRoute";
 import { currentUserContext } from '../contexts/CurrentUserContext';
-import { RegisterHandler, AuthorizeHandler, EditProfileHandler } from '../../utils/errorHandlers'
+import { RegisterHandler, AuthorizeHandler, EditProfileHandler } from '../../utils/errorHandlers';
+const { MAX_SHORT_FILM_TIME } = require('../../utils/const')
 
 function App() {
   const history = useHistory();
@@ -26,10 +27,16 @@ function App() {
 
   const handleClickMovies = () => {
     history.push('/movies')
+    setSaved(!saved)
+    setNothingFound(false)
+    setShortFilm((JSON.parse(localStorage.getItem('toggle')) || false));
   }
 
   const handleClickSavedMovies = () => {
-    history.push('/saved-movies')
+    history.push('/saved-movies');
+    setSaved(!saved);
+    setNothingFound(false);
+    setShortFilm(false);
   }
 
   const handleClickRegister = () => {
@@ -46,10 +53,15 @@ function App() {
 
   const [data, setData] = useState([]);
 
-  const [movies, setMovies] = useState([...JSON.parse(localStorage.getItem('mov' || 'short-mov') || '[]')]);
+  const [movies, setMovies] = useState([]);
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [myMovies, setMyMovies] = useState([]);
 
-  const [savedMovies, setSavedMovies] = useState([...JSON.parse(localStorage.getItem('save-mov' || 'save-short-mov') || '[]')]);
-  const [shortFilm, setShortFilm] = useState(false || JSON.parse(localStorage.getItem('toggle')));
+  const [saved, setSaved] = useState(false);
+
+  const [shortFilm, setShortFilm] = useState(
+    history.location.pathname === '/movies' ? (JSON.parse(localStorage.getItem('toggle')) || false) : false);
+
   const [preloader, setPreloader] = useState(false);
 
   //ошибки при загрузке и поиске фильмов
@@ -58,25 +70,66 @@ function App() {
   const [messageerror, setMessageError] = useState(false);
 
   const [currentUser, setCurrentUser] = useState({});
-  const [loggedIn, setloggedIn] = useState(false || JSON.parse(localStorage.getItem('userLogged')));
+  const [loggedIn, setloggedIn] = useState(JSON.parse(localStorage.getItem('userLogged')) || false);
   const [token, setToken] = useState('');
+  const [formDisabled, setFormDisabled] = useState(false);
 
   useEffect(() => {
-    mainApi.getUserInfo(localStorage.getItem('jwt'))
-      .then((userData) => {
-        setCurrentUser(userData);
-      })
-      .catch((err) => {
-      })
+    if (loggedIn) {
+      mainApi.getUserInfo(localStorage.getItem('jwt'))
+        .then((userData) => {
+          setCurrentUser(userData);
+        })
+        .catch((err) => {
+        })
+
+      moviesApi.handleMovies()
+        .then((res) => {
+          setData(res);
+        })
+        .catch((err) => {
+          setMoviesSearchError(true);
+          console.log(err);
+        })
+    }
+  }, [loggedIn])
+
+  useEffect(() => {
+    if (loggedIn) {
+      //возвращает все сохранённые фильмы
+      mainApi.getSavedMovies()
+        .then((res) => {
+          setMyMovies(res || []);
+          setSavedMovies(res.filter(sortShortFilm));
+
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   }, [loggedIn])
 
   useEffect(() => {
     tokenCheck();
-  })
+  }, [loggedIn])
 
   const handleLogin = (isLogin) => {
     setloggedIn(isLogin);
   }
+
+  useEffect(() => {
+    if (token) {
+      auth.getContent(token)
+        .then((res) => {
+          if (res) {
+            handleLogin(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+  }, [token])
 
   const tokenCheck = () => {
 
@@ -88,93 +141,96 @@ function App() {
       setToken(localStorage.getItem('jwt'));
 
       if (token) {
-        localStorage.setItem('userLogged', JSON.stringify(true)) //
-        auth.getContent(token)
-          .then((res) => {
-            if (res) {
-              handleLogin(true);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          })
+        localStorage.setItem('userLogged', JSON.stringify(true));
       }
       else {
         localStorage.setItem('userLogged', JSON.stringify(false));
-
       }
     }
   }
 
-  useEffect(() => {
-    setNothingFound();
-  }, [movies.length, shortFilm])
-
   //переключатель тумблера короткометражек
   function handleShortFilm() {
-    setShortFilm(!shortFilm);
-    if (!shortFilm) {
-      setMovies([...JSON.parse(localStorage.getItem('short-mov') || '[]')]);
-      setSavedMovies([...JSON.parse(localStorage.getItem('save-short-mov') || '[]')]);
-    }
-    else {
-      setMovies([...JSON.parse(localStorage.getItem('mov') || '[]')]);
-      setSavedMovies([...JSON.parse(localStorage.getItem('save-mov') || '[]')]);
+    let newStatus = !shortFilm;
+    setShortFilm(newStatus);
+    if (history.location.pathname === '/movies') {
+      localStorage.setItem('toggle', JSON.stringify(newStatus));
     }
   }
 
-  function getAllMovies() {
-    moviesApi.handleMovies()
-      .then((res) => {
-        setData(res);
-      })
-      .catch((err) => {
-        setMoviesSearchError(true);
-        console.log(err);
-      })
+  const sortShortFilm = (item) => {
+    if (shortFilm) {
+      return item.duration <= MAX_SHORT_FILM_TIME
+    } else {
+      return item.duration > MAX_SHORT_FILM_TIME
+    }
   }
 
   //ищем фильмы и сохраняем в localstorage
-  function handleSearchMovies(title) {
+  const handleSearchMovies = (title) => {
     setPreloader(true);
-    getAllMovies()
+    setNothingFound(false);
+    setFormDisabled(true);
+
     let filteredFilms = [];
     let updatedFilms = [];
     let uniq = {};
     let filterUniq = [];
 
-    if (shortFilm) {
-      filteredFilms = data.filter(item => (item.nameRU.includes(title)) && item.duration <= 40);
-      localStorage.setItem('toggle', JSON.stringify(true));
-      setShortFilm(JSON.parse(localStorage.getItem('toggle')));
-    } else if (!shortFilm) {
-      filteredFilms = data.filter(item => (item.nameRU.includes(title)) && item.duration > 40);
-      localStorage.setItem('toggle', JSON.stringify(false));
-      setShortFilm(JSON.parse(localStorage.getItem('toggle')));
+    if (history.location.pathname === '/movies') {
+      filteredFilms = data.filter(item => (item.nameRU.toLowerCase().includes(title.toLowerCase())));
+      if (filteredFilms.length > 0) {
+        updatedFilms = [...filteredFilms, ...JSON.parse(localStorage.getItem('mov')) || []];
+        updatedFilms = updatedFilms.filter(sortShortFilm);
+        filterUniq = updatedFilms.filter(obj => !uniq[obj.id] && (uniq[obj.id] = true));
+        localStorage.setItem('mov', JSON.stringify(filterUniq));
+        setMovies(filterUniq);
+      }
+      if (filterUniq.length === 0) {
+        setNothingFound(true);
+      }
     }
 
-    if (filteredFilms.length > 0 && shortFilm) {
-      updatedFilms = [...filteredFilms, ...JSON.parse(localStorage.getItem('short-mov')) || []];
-      localStorage.setItem('short-mov', JSON.stringify(updatedFilms));
-      filterUniq = [...JSON.parse(localStorage.getItem('short-mov'))].filter(obj => !uniq[obj.id] && (uniq[obj.id] = true));
-      localStorage.setItem('short-mov', JSON.stringify(filterUniq));
-      setMovies([...JSON.parse(localStorage.getItem('short-mov'))]);
-
-    } else if (filteredFilms.length > 0 && !shortFilm) {
-      updatedFilms = [...filteredFilms, ...JSON.parse(localStorage.getItem('mov')) || []];
-      localStorage.setItem('mov', JSON.stringify(updatedFilms));
-      filterUniq = [...JSON.parse(localStorage.getItem('mov'))].filter(obj => !uniq[obj.id] && (uniq[obj.id] = true));
-      localStorage.setItem('mov', JSON.stringify(filterUniq))
-      setMovies([...JSON.parse(localStorage.getItem('mov'))]);
-
+    if (history.location.pathname === '/saved-movies') {
+      filteredFilms = myMovies.filter(item => (item.nameRU.toLowerCase().includes(title.toLowerCase())));
+      filteredFilms = filteredFilms.filter(sortShortFilm);
+      filterUniq = filteredFilms.filter(obj => !uniq[obj._id] && (uniq[obj._id] = true));
+      setSavedMovies(filterUniq);
+      if (filterUniq.length === 0) {
+        setNothingFound(true);
+      }
     }
-
-    if (movies.length === 0) {
-      setNothingFound(true);
-    }
-
     setPreloader(false);
+    setFormDisabled(false);
+
   }
+
+  useEffect(() => {
+    if (history.location.pathname === '/movies' && shortFilm) {
+      let Films = [...JSON.parse(localStorage.getItem('mov')) || []].filter((item) => {
+        return item.duration <= MAX_SHORT_FILM_TIME
+      })
+      setMovies(Films)
+    }
+    else if (history.location.pathname === '/movies' && !shortFilm) {
+      let ShortFilms = [...JSON.parse(localStorage.getItem('mov')) || []].filter((item) => {
+        return item.duration > MAX_SHORT_FILM_TIME
+      })
+      setMovies(ShortFilms)
+    }
+    else if (history.location.pathname === '/saved-movies' && shortFilm) {
+      let Films = myMovies.filter((item) => {
+        return item.duration <= MAX_SHORT_FILM_TIME
+      })
+      setSavedMovies(Films)
+    }
+    else if (history.location.pathname === '/saved-movies' && !shortFilm) {
+      let ShortFilms = myMovies.filter((item) => {
+        return item.duration > MAX_SHORT_FILM_TIME
+      })
+      setSavedMovies(ShortFilms)
+    }
+  }, [shortFilm, saved])
 
   //кнопка еще
   const [dimensions, setDimensions] = useState({
@@ -232,6 +288,40 @@ function App() {
       })
   }
 
+  //сохранение фильма
+  const handleSaveClick = (movie) => {
+    let uniq = {};
+    let filterUniq = [];
+    mainApi.saveMovie(movie)
+      .then((res) => {
+        filterUniq = [res.data, ...savedMovies]
+        filterUniq = filterUniq.filter(obj => !uniq[obj._id] && (uniq[obj._id] = true));
+        setMyMovies([res.data, ...myMovies])
+        setSavedMovies(filterUniq);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
+  //удаление фильма из сохраненных 
+  const handleDeleteMovie = (movie) => {
+    myMovies.forEach((item) => {
+      if (item.nameRU === movie.nameRU) {
+        movie._id = item._id
+      }
+    })
+
+    mainApi.removeMovie(movie)
+      .then((res) => {
+        setMyMovies(myMovies.filter((film) => film._id !== res.data._id));
+        setSavedMovies(savedMovies.filter((film) => film._id !== res.data._id));
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
   return (
     <currentUserContext.Provider value={currentUser}>
 
@@ -247,20 +337,23 @@ function App() {
             movies={movies} handleSearchMovies={handleSearchMovies} handleClickMain={handleClickMain} handleClickProfile={handleClickProfile}
             handleClickMovies={handleClickMovies} handleClickSavedMovies={handleClickSavedMovies} preloader={preloader}
             handleShortFilm={handleShortFilm} shortFilm={shortFilm} nothingFound={nothingFound} moviesSearchError={moviesSearchError}
-            dimensions={dimensions} setSavedMovies={setSavedMovies}
+            dimensions={dimensions} setSavedMovies={setSavedMovies} data={data} handleSaveClick={handleSaveClick}
+            saved={saved} setSaved={setSaved} myMovies={myMovies} handleDeleteMovie={handleDeleteMovie} savedMovies={savedMovies}
+            formDisabled={formDisabled}
           />
 
           <ProtectedRoute exact path="/saved-movies" loggedIn={localStorage.getItem('userLogged')} component={SavedMovies}
-            savedMovies={savedMovies} handleSearchMovies={handleSearchMovies} shortFilm={shortFilm}
+            savedMovies={savedMovies} handleSearchMovies={handleSearchMovies} shortFilm={shortFilm} nothingFound={nothingFound}
             handleClickMain={handleClickMain} handleClickProfile={handleClickProfile} handleClickMovies={handleClickMovies}
-            handleClickSavedMovies={handleClickSavedMovies} setSavedMovies={setSavedMovies} dimensions={dimensions}
-            handleShortFilm={handleShortFilm}
+            handleClickSavedMovies={handleClickSavedMovies} preloader={preloader} setSavedMovies={setSavedMovies} dimensions={dimensions}
+            handleShortFilm={handleShortFilm} handleSaveClick={handleSaveClick} handleDeleteMovie={handleDeleteMovie} data={data}
+            saved={saved} setSaved={setSaved} myMovies={myMovies} formDisabled={formDisabled}
           />
 
           <ProtectedRoute exact path="/profile" loggedIn={localStorage.getItem('userLogged')} component={Profile}
             handleClickMain={handleClickMain} handleClickMovies={handleClickMovies} setloggedIn={setloggedIn}
             handleClickSavedMovies={handleClickSavedMovies} handleEditUserInfo={handleEditUserInfo} setToken={setToken}
-            messageerror={messageerror} setMessageError={setMessageError} />
+            messageerror={messageerror} setMessageError={setMessageError} setSavedMovies={setSavedMovies} setMovies={setMovies} setShortFilm={setShortFilm} />
 
           <Route exact path='/signin' >
             <Login loggedIn={localStorage.getItem('userLogged')} messageerror={messageerror} setMessageError={setMessageError} handleClickRegister={handleClickRegister} handleClickMain={handleClickMain} handleAuthorize={handleAuthorize}></Login>
@@ -274,13 +367,13 @@ function App() {
           </Route>
 
           <Route exact path="/movies">
-            {loggedIn ? <Redirect to="/movies" /> : <Redirect to="/signin" />}
+            {loggedIn ? <Redirect to="/movies" /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/saved-movies">
-            {loggedIn ? <Redirect to="/saved-movies" /> : <Redirect to="/signin" />}
+            {loggedIn ? <Redirect to="/saved-movies" /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/profile">
-            {loggedIn ? <Redirect to="/profile" /> : <Redirect to="/signin" />}
+            {loggedIn ? <Redirect to="/profile" /> : <Redirect to="/" />}
           </Route>
 
         </Switch>

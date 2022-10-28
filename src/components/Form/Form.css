@@ -28,6 +28,7 @@
     font-size: 14px;
     line-height: 16.94px;
     font-weight: 400;
+    background-color: #fafafa;
 }
 
 .form__input:focus {
@@ -81,6 +82,11 @@
 
 .form__error_profile {
     margin-top: 24px;
+}
+
+.form__error_search {
+    margin-top: 75px;
+    font-size: 12px;
 }
 
 .form__placeholder {
@@ -178,6 +184,30 @@
 }
 
 .form__error-message_active {
+    display: flex;
+    position: absolute;
+    bottom: 50px;
+    justify-content: center;
+    width: 100%;
+}
+
+.form__error-message_search {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.form__changed-message {
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 13.31px;
+    margin: 0 auto;
+    display: none;
+    margin-bottom: 20px;
+}
+
+.form__changed-message_active {
     display: flex;
     position: absolute;
     bottom: 50px;

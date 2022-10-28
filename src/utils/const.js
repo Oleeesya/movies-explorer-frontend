@@ -13,7 +13,15 @@ const messageForbidden = 'При авторизации произошла ош�
 const nothingFound = 'Ничего не найдено';
 const moviesSearchError = 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.';
 
+const MAX_SHORT_FILM_TIME = 40;
 
+const INIT_CARD_COUNT1 = 12;
+const INIT_CARD_COUNT2 = 8;
+const INIT_CARD_COUNT3 = 5;
+
+const SCREEN_SIZE1 = 768;
+const SCREEN_SIZE2 = 480;
+const SCREEN_SIZE3 = 320;
 
 module.exports = {
     emailRegex,
@@ -27,4 +35,11 @@ module.exports = {
     messageForbidden,
     nothingFound,
     moviesSearchError,
+    MAX_SHORT_FILM_TIME,
+    INIT_CARD_COUNT1,
+    INIT_CARD_COUNT2,
+    INIT_CARD_COUNT3,
+    SCREEN_SIZE1,
+    SCREEN_SIZE2,
+    SCREEN_SIZE3,
 };

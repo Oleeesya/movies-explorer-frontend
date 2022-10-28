@@ -40,14 +40,16 @@ function Movies(props) {
             </Header>
             <main className='movies__content'>
                 <SearchForm handleSearchMovies={props.handleSearchMovies} handleShortFilm={props.handleShortFilm}
-                    shortFilm={props.shortFilm} />
+                    shortFilm={props.shortFilm} setSaved={props.setSaved} saved={props.saved} formDisabled={props.formDisabled} />
                 <Preloader preloader={props.preloader} />
                 <div className={`${props.nothingFound || props.moviesSearchError ? 'movies-error movies-error_active' : 'movies-error'}`}>
                     {`${props.nothingFound ? nothingFound : props.moviesSearchError ? moviesSearchError : ''}`}
 
                 </div>
                 <MoviesCardList movies={props.movies} dimensions={props.dimensions} setSavedMovies={props.setSavedMovies}
-                    shortFilm={props.shortFilm}>
+                    shortFilm={props.shortFilm} data={props.data} handleSaveClick={props.handleSaveClick}
+                    handleDeleteMovie={props.handleDeleteMovie} nothingFound={props.nothingFound}
+                    saved={props.saved} myMovies={props.myMovies}>
                 </MoviesCardList>
             </main>
             <Footer />

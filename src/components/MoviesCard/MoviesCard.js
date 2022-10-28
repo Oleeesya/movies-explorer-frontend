@@ -7,7 +7,16 @@ function MoviesCard(props) {
 
     const history = useHistory();
 
-    const [save, setSave] = useState(false);
+    const isSave = () => {
+        for (let i = 0; i < props.myMovies.length; i++) {
+            if (props.myMovies[i].nameRU === props.name) {
+                return true
+            }
+        }
+        return false
+    }
+
+    const [save, setSave] = useState(isSave());
     const [remove, setRemove] = useState(false);
 
     const [hour, setHour] = useState(0);
@@ -19,57 +28,21 @@ function MoviesCard(props) {
     }, [props.duration]);
 
     const handleSaveClick = (e) => {
-        let saveMovies = [];
-        let filterUniq = [];
-        let uniq = {};
-        let filmToSave = [];
-        if (props.shortFilm) {
-            filmToSave = JSON.parse(localStorage.getItem('short-mov')).find((item) => item.nameRU === e.target.getAttribute('titlemovie'));
-
-            saveMovies = [filmToSave, ...JSON.parse(localStorage.getItem('save-short-mov')) || []];
-
-            localStorage.setItem('save-short-mov', JSON.stringify(saveMovies));
-            filterUniq = [...JSON.parse(localStorage.getItem('save-short-mov')) || []].filter(obj => !uniq[obj.id] && (uniq[obj.id] = true));
-
-            localStorage.setItem('save-short-mov', JSON.stringify(filterUniq));
-            props.setSavedMovies([...JSON.parse(localStorage.getItem('save-short-mov'))]);
-
-        }
-        else {
-            filmToSave = JSON.parse(localStorage.getItem('mov')).find((item) => item.nameRU === e.target.getAttribute('titlemovie'));
-
-            saveMovies = [filmToSave, ...JSON.parse(localStorage.getItem('save-mov')) || []];
-
-            localStorage.setItem('save-mov', JSON.stringify(saveMovies));
-            filterUniq = [...JSON.parse(localStorage.getItem('save-mov')) || []].filter(obj => !uniq[obj.id] && (uniq[obj.id] = true));
-
-            localStorage.setItem('save-mov', JSON.stringify(filterUniq));
-            props.setSavedMovies([...JSON.parse(localStorage.getItem('save-mov'))]);
-        }
-
+        let film = {};
+        film = props.data.find((item) => item.nameRU === e.target.getAttribute('titlemovie'));
+        props.handleSaveClick(film);
         setSave(true);
     }
 
-    const handleRemoveMovie = (e) => {
-        let filmToRemove = [];
-        let filterFilms = [];
+    useEffect(() => {
+        setSave(isSave())
+    }, [props.myMovies])
 
-        if (props.shortFilm) {
-            filmToRemove = JSON.parse(localStorage.getItem('save-short-mov')).find((item) => item.nameRU === e.target.getAttribute('titlemovie'));
-            filterFilms = [...JSON.parse(localStorage.getItem('save-short-mov')) || []].filter((obj) => obj.nameRU !== filmToRemove.nameRU);
-            localStorage.setItem('save-short-mov', JSON.stringify(filterFilms));
-
-            props.setSavedMovies(filterFilms);
-        }
-        else {
-
-            filmToRemove = JSON.parse(localStorage.getItem('save-mov')).find((item) => item.nameRU === e.target.getAttribute('titlemovie'));
-            filterFilms = [...JSON.parse(localStorage.getItem('save-mov')) || []].filter((obj) => obj.nameRU !== filmToRemove.nameRU);
-            localStorage.setItem('save-mov', JSON.stringify(filterFilms));
-
-            props.setSavedMovies(filterFilms);
-        }
-
+    const handleDeleteMovie = (e) => {
+        let film = {};
+        film = props.movies.find((item) => item.nameRU === e.target.getAttribute('titlemovie'));
+        props.handleDeleteMovie(film)
+        setSave(false);
     }
 
     const handleRemoveOver = () => {
@@ -80,22 +53,6 @@ function MoviesCard(props) {
         setRemove(false);
     }
 
-    let savedFilms = JSON.parse(localStorage.getItem('save-mov')) || [];
-    let savedShortFilms = JSON.parse(localStorage.getItem('save-short-mov')) || [];
-
-    useEffect(() => {
-        savedFilms.forEach(element => {
-            if (element.nameRU === props.name) {
-                setSave(true)
-            }
-        });
-        savedShortFilms.forEach(element => {
-            if (element.nameRU === props.name) {
-                setSave(true)
-            }
-        });
-    })
-
     const openInNewTab = url => {
         window.open(url, '_blank', 'noopener,noreferrer');
     };
@@ -104,15 +61,16 @@ function MoviesCard(props) {
         <article className="moviesCard">
             <button className={`${save && history.location.pathname === '/movies' ? 'moviesCard__saved_active' :
                 history.location.pathname === '/movies' ? 'moviesCard__saved' : 'moviesCard__saved_none'}`}
-                type="button" onClick={handleSaveClick} titlemovie={props.name}>
+                type="button" onClick={save ? handleDeleteMovie : handleSaveClick} titlemovie={props.name}
+            >
                 {`${save ? "" : "Сохранить"}`}
             </button>
-            <button className={`${remove && history.location.pathname === '/saved-movies' ? 'moviesCard__remove'
-                : 'moviesCard__remove_none'}`}
-                type='button' onMouseOver={handleRemoveOver} onMouseOut={handleDeleteRemoveOver} onClick={handleRemoveMovie}
+            <button className={`${remove && history.location.pathname === '/saved-movies' ? 'moviesCard__remove moviesCard__remove_mobile'
+                : history.location.pathname === '/saved-movies' ? 'moviesCard__remove_none moviesCard__remove_mobile' : 'moviesCard__remove_none'}`}
+                type='button' onMouseOver={handleRemoveOver} onMouseOut={handleDeleteRemoveOver} onClick={handleDeleteMovie}
                 titlemovie={props.name}></button>
             <img className='moviesCard__image_hover moviesCard__image'
-                src={'https://api.nomoreparties.co/' + props.link} alt={props.name}
+                src={`${props.link.startsWith('http') ? props.link : 'https://api.nomoreparties.co/' + props.link}`} alt={props.name}
                 onMouseOver={handleRemoveOver} onMouseOut={handleDeleteRemoveOver}
                 onClick={() => openInNewTab(props.trailerLink)}
             />

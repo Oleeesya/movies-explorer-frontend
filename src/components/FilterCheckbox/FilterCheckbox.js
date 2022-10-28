@@ -2,7 +2,6 @@ import React from 'react';
 import './filterCheckbox.css';
 
 function FilterCheckbox(props) {
-
     return (
         <div className="filterCheckbox">
             <input type="checkbox" className="filterCheckbox__custom" id="shortfilms" name="shortfilms" value="yes"
