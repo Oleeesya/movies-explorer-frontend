@@ -28,10 +28,17 @@ function MoviesCard(props) {
     }, [props.duration]);
 
     const handleSaveClick = (e) => {
+        let allFilms = JSON.parse(localStorage.getItem('movies-from-yandex-api'));
         let film = {};
-        film = props.data.find((item) => item.nameRU === e.target.getAttribute('titlemovie'));
-        props.handleSaveClick(film);
-        setSave(true);
+        film = allFilms.find((item) => item.nameRU === e.target.getAttribute('titlemovie'));
+        let promise = props.handleSaveClick(film);
+        promise
+            .then(() => {
+                setSave(true)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     useEffect(() => {

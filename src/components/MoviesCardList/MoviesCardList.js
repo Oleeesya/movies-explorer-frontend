@@ -7,7 +7,6 @@ const { INIT_CARD_COUNT1, INIT_CARD_COUNT2, INIT_CARD_COUNT3, SCREEN_SIZE1, SCRE
 
 function MoviesCardList(props) {
 
-    const [showMore, setShowMore] = useState(false);
 
     const getInitialCount = () => {
         if (props.dimensions.width > SCREEN_SIZE1) {
@@ -47,7 +46,6 @@ function MoviesCardList(props) {
     const { count, add } = useCounter();
 
     function handleShowMore() {
-        setShowMore(true);
         add();
     }
 
@@ -60,7 +58,8 @@ function MoviesCardList(props) {
                         <MoviesCard key={movie.nameRU} link={movie.image.url || movie.image} name={movie.nameRU} duration={movie.duration}
                             id={movie.id} setSavedMovies={props.setSavedMovies} movies={props.movies}
                             handleSaveClick={props.handleSaveClick} shortFilm={props.shortFilm} trailerLink={movie.trailerLink}
-                            data={props.data} handleDeleteMovie={props.handleDeleteMovie} saved={props.saved} myMovies={props.myMovies}
+                            handleDeleteMovie={props.handleDeleteMovie} saved={props.saved} myMovies={props.myMovies}
+                            saveCard={props.saveCard}
                         />
                     )
                 })

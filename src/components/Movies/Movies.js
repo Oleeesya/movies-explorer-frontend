@@ -47,9 +47,9 @@ function Movies(props) {
 
                 </div>
                 <MoviesCardList movies={props.movies} dimensions={props.dimensions} setSavedMovies={props.setSavedMovies}
-                    shortFilm={props.shortFilm} data={props.data} handleSaveClick={props.handleSaveClick}
+                    shortFilm={props.shortFilm} handleSaveClick={props.handleSaveClick}
                     handleDeleteMovie={props.handleDeleteMovie} nothingFound={props.nothingFound}
-                    saved={props.saved} myMovies={props.myMovies}>
+                    saved={props.saved} myMovies={props.myMovies} saveCard={props.saveCard}>
                 </MoviesCardList>
             </main>
             <Footer />

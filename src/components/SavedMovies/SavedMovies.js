@@ -10,7 +10,6 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { useHistory } from 'react-router-dom';
 const { moviesSearchError, nothingFound } = require('../../utils/const');
 
-
 function SavedMovies(props) {
 
     const history = useHistory();
@@ -20,6 +19,7 @@ function SavedMovies(props) {
     const handleClickMenu = () => {
         setMobile(!mobile);
     }
+    
     return (
         <div className="savedMovies">
             <Header handleClickMain={props.handleClickMain}>
@@ -50,7 +50,8 @@ function SavedMovies(props) {
                 </div>
                 <MoviesCardList movies={props.savedMovies} setSavedMovies={props.setSavedMovies} nothingFound={props.nothingFound}
                     handleSaveClick={props.handleSaveClick} dimensions={props.dimensions} shortFilm={props.shortFilm}
-                    handleDeleteMovie={props.handleDeleteMovie} saved={props.saved} loggedIn={props.loggedIn} myMovies={props.myMovies} />
+                    handleDeleteMovie={props.handleDeleteMovie} saved={props.saved} loggedIn={props.loggedIn} myMovies={props.myMovies}
+                    saveCard={props.saveCard} />
             </main>
             <Footer />
         </div>

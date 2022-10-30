@@ -22,7 +22,10 @@ function App() {
   const history = useHistory();
 
   const handleClickMain = () => {
-    history.push('/')
+    history.push('/');
+    setProfile(false);
+    setMessageError('');
+    setStatus(false);
   }
 
   const handleClickMovies = () => {
@@ -30,6 +33,9 @@ function App() {
     setSaved(!saved)
     setNothingFound(false)
     setShortFilm((JSON.parse(localStorage.getItem('toggle')) || false));
+    setProfile(false);
+    setMessageError('');
+    setStatus(false);
   }
 
   const handleClickSavedMovies = () => {
@@ -37,21 +43,31 @@ function App() {
     setSaved(!saved);
     setNothingFound(false);
     setShortFilm(false);
+    setProfile(false);
+    setMessageError('');
+    setStatus(false);
   }
 
   const handleClickRegister = () => {
-    history.push('/signup')
+    history.push('/signup');
+    setProfile(false);
+    setMessageError('');
+    setStatus(false);
   }
 
   const handleClickLogin = () => {
     history.push('/signin')
+    setProfile(false);
+    setMessageError('');
+    setStatus(false);
   }
 
   const handleClickProfile = () => {
-    history.push('/profile')
+    history.push('/profile');
+    setProfile(false);
+    setMessageError('');
+    setStatus(false);
   }
-
-  const [data, setData] = useState([]);
 
   const [movies, setMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
@@ -73,6 +89,9 @@ function App() {
   const [loggedIn, setloggedIn] = useState(JSON.parse(localStorage.getItem('userLogged')) || false);
   const [token, setToken] = useState('');
   const [formDisabled, setFormDisabled] = useState(false);
+  const [isStatus, setStatus] = useState(false);
+  const [profile, setProfile] = useState(false);
+  const [saveCard, setSaveCard] = useState(false);
 
   useEffect(() => {
     if (loggedIn) {
@@ -81,16 +100,19 @@ function App() {
           setCurrentUser(userData);
         })
         .catch((err) => {
-        })
-
-      moviesApi.handleMovies()
-        .then((res) => {
-          setData(res);
-        })
-        .catch((err) => {
-          setMoviesSearchError(true);
           console.log(err);
         })
+
+      if (!localStorage.getItem('movies-from-yandex-api')) {
+        moviesApi.handleMovies()
+          .then((res) => {
+            localStorage.setItem('movies-from-yandex-api', JSON.stringify(res))
+          })
+          .catch((err) => {
+            setMoviesSearchError(true);
+            console.log(err);
+          })
+      }
     }
   }, [loggedIn])
 
@@ -101,13 +123,16 @@ function App() {
         .then((res) => {
           setMyMovies(res || []);
           setSavedMovies(res.filter(sortShortFilm));
-
         })
         .catch((err) => {
           console.log(err)
         })
     }
   }, [loggedIn])
+
+  useEffect(() => {
+    setMessageError("");
+  }, [window])
 
   useEffect(() => {
     tokenCheck();
@@ -161,34 +186,30 @@ function App() {
   const sortShortFilm = (item) => {
     if (shortFilm) {
       return item.duration <= MAX_SHORT_FILM_TIME
-    } else {
-      return item.duration > MAX_SHORT_FILM_TIME
     }
+    return true
   }
 
   //ищем фильмы и сохраняем в localstorage
   const handleSearchMovies = (title) => {
+
     setPreloader(true);
     setNothingFound(false);
     setFormDisabled(true);
 
     let filteredFilms = [];
-    let updatedFilms = [];
     let uniq = {};
     let filterUniq = [];
 
     if (history.location.pathname === '/movies') {
-      filteredFilms = data.filter(item => (item.nameRU.toLowerCase().includes(title.toLowerCase())));
-      if (filteredFilms.length > 0) {
-        updatedFilms = [...filteredFilms, ...JSON.parse(localStorage.getItem('mov')) || []];
-        updatedFilms = updatedFilms.filter(sortShortFilm);
-        filterUniq = updatedFilms.filter(obj => !uniq[obj.id] && (uniq[obj.id] = true));
-        localStorage.setItem('mov', JSON.stringify(filterUniq));
-        setMovies(filterUniq);
-      }
+      let allFilms = JSON.parse(localStorage.getItem('movies-from-yandex-api'));
+      filteredFilms = allFilms.filter(item => (item.nameRU.toLowerCase().includes(title.toLowerCase())));
+      filterUniq = filteredFilms.filter(obj => !uniq[obj.id] && (uniq[obj.id] = true));
+      localStorage.setItem('mov', JSON.stringify(filterUniq));
       if (filterUniq.length === 0) {
         setNothingFound(true);
       }
+      setMovies(filterUniq.filter(sortShortFilm));
     }
 
     if (history.location.pathname === '/saved-movies') {
@@ -202,33 +223,16 @@ function App() {
     }
     setPreloader(false);
     setFormDisabled(false);
-
   }
 
   useEffect(() => {
-    if (history.location.pathname === '/movies' && shortFilm) {
-      let Films = [...JSON.parse(localStorage.getItem('mov')) || []].filter((item) => {
-        return item.duration <= MAX_SHORT_FILM_TIME
-      })
+    if (history.location.pathname === '/movies') {
+      let Films = [...JSON.parse(localStorage.getItem('mov')) || []].filter(sortShortFilm)
       setMovies(Films)
     }
-    else if (history.location.pathname === '/movies' && !shortFilm) {
-      let ShortFilms = [...JSON.parse(localStorage.getItem('mov')) || []].filter((item) => {
-        return item.duration > MAX_SHORT_FILM_TIME
-      })
-      setMovies(ShortFilms)
-    }
-    else if (history.location.pathname === '/saved-movies' && shortFilm) {
-      let Films = myMovies.filter((item) => {
-        return item.duration <= MAX_SHORT_FILM_TIME
-      })
+    else if (history.location.pathname === '/saved-movies') {
+      let Films = myMovies.filter(sortShortFilm)
       setSavedMovies(Films)
-    }
-    else if (history.location.pathname === '/saved-movies' && !shortFilm) {
-      let ShortFilms = myMovies.filter((item) => {
-        return item.duration > MAX_SHORT_FILM_TIME
-      })
-      setSavedMovies(ShortFilms)
     }
   }, [shortFilm, saved])
 
@@ -260,7 +264,7 @@ function App() {
         if (data.token) {
           handleLogin(true);
 
-          history.push('/');
+          history.push('/movies');
         }
       })
       .catch((err) => {
@@ -282,8 +286,11 @@ function App() {
     mainApi.editUserInfo(userInfo)
       .then((res) => {
         setCurrentUser(userInfo);
+        setStatus(true);
+        setProfile(false);
       })
       .catch((err) => {
+        setProfile(true);
         setMessageError(EditProfileHandler(err));
       })
   }
@@ -292,15 +299,13 @@ function App() {
   const handleSaveClick = (movie) => {
     let uniq = {};
     let filterUniq = [];
-    mainApi.saveMovie(movie)
+    return mainApi.saveMovie(movie)
       .then((res) => {
         filterUniq = [res.data, ...savedMovies]
         filterUniq = filterUniq.filter(obj => !uniq[obj._id] && (uniq[obj._id] = true));
         setMyMovies([res.data, ...myMovies])
         setSavedMovies(filterUniq);
-      })
-      .catch((err) => {
-        console.log(err);
+        setSaveCard(true);
       })
   }
 
@@ -337,23 +342,24 @@ function App() {
             movies={movies} handleSearchMovies={handleSearchMovies} handleClickMain={handleClickMain} handleClickProfile={handleClickProfile}
             handleClickMovies={handleClickMovies} handleClickSavedMovies={handleClickSavedMovies} preloader={preloader}
             handleShortFilm={handleShortFilm} shortFilm={shortFilm} nothingFound={nothingFound} moviesSearchError={moviesSearchError}
-            dimensions={dimensions} setSavedMovies={setSavedMovies} data={data} handleSaveClick={handleSaveClick}
+            dimensions={dimensions} setSavedMovies={setSavedMovies} handleSaveClick={handleSaveClick}
             saved={saved} setSaved={setSaved} myMovies={myMovies} handleDeleteMovie={handleDeleteMovie} savedMovies={savedMovies}
-            formDisabled={formDisabled}
+            formDisabled={formDisabled} saveCard={saveCard}
           />
 
           <ProtectedRoute exact path="/saved-movies" loggedIn={localStorage.getItem('userLogged')} component={SavedMovies}
             savedMovies={savedMovies} handleSearchMovies={handleSearchMovies} shortFilm={shortFilm} nothingFound={nothingFound}
             handleClickMain={handleClickMain} handleClickProfile={handleClickProfile} handleClickMovies={handleClickMovies}
             handleClickSavedMovies={handleClickSavedMovies} preloader={preloader} setSavedMovies={setSavedMovies} dimensions={dimensions}
-            handleShortFilm={handleShortFilm} handleSaveClick={handleSaveClick} handleDeleteMovie={handleDeleteMovie} data={data}
-            saved={saved} setSaved={setSaved} myMovies={myMovies} formDisabled={formDisabled}
+            handleShortFilm={handleShortFilm} handleSaveClick={handleSaveClick} handleDeleteMovie={handleDeleteMovie}
+            saved={saved} setSaved={setSaved} myMovies={myMovies} formDisabled={formDisabled} saveCard={saveCard}
           />
 
           <ProtectedRoute exact path="/profile" loggedIn={localStorage.getItem('userLogged')} component={Profile}
             handleClickMain={handleClickMain} handleClickMovies={handleClickMovies} setloggedIn={setloggedIn}
             handleClickSavedMovies={handleClickSavedMovies} handleEditUserInfo={handleEditUserInfo} setToken={setToken}
-            messageerror={messageerror} setMessageError={setMessageError} setSavedMovies={setSavedMovies} setMovies={setMovies} setShortFilm={setShortFilm} />
+            messageerror={messageerror} setMessageError={setMessageError} setSavedMovies={setSavedMovies} setMovies={setMovies}
+            setShortFilm={setShortFilm} setStatus={setStatus} isStatus={isStatus} setProfile={setProfile} profile={profile} />
 
           <Route exact path='/signin' >
             <Login loggedIn={localStorage.getItem('userLogged')} messageerror={messageerror} setMessageError={setMessageError} handleClickRegister={handleClickRegister} handleClickMain={handleClickMain} handleAuthorize={handleAuthorize}></Login>

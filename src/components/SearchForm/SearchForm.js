@@ -37,7 +37,6 @@ function SearchForm(props) {
     return (
         <>
             <form className="searchForm" onSubmit={props.formDisabled ? () => { } : handleSubmit(handleSearchMovies)} >
-
                 <input {...register('name', { required: true, minLength: 1, type: String })}
                     className="searchForm__input" type="text" placeholder='Фильм' value={nameMovies || ''} onInput={handleChangeName} />
                 {errors.name && <p className='form__error form__error_search'>Нужно ввести ключевое слово</p>}
