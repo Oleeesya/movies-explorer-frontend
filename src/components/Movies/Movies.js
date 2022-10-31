@@ -7,6 +7,7 @@ import Preloader from '../Preloader/Preloader';
 import './Movies.css';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { useHistory } from 'react-router-dom';
+const { moviesSearchError, nothingFound } = require('../../utils/const')
 
 function Movies(props) {
     const [mobile, setMobile] = useState(false);
@@ -16,6 +17,7 @@ function Movies(props) {
     const handleClickMenu = () => {
         setMobile(!mobile);
     }
+
     return (
         <div className="movies">
             <Header handleClickMain={props.handleClickMain}>
@@ -37,10 +39,17 @@ function Movies(props) {
                     onClick={handleClickMenu}></button>
             </Header>
             <main className='movies__content'>
-                <SearchForm />
-                <Preloader />
-                <MoviesCardList movies={props.movies}>
-                    <button className='moviesCardList__btn-more'>Ещё</button>
+                <SearchForm handleSearchMovies={props.handleSearchMovies} handleShortFilm={props.handleShortFilm}
+                    shortFilm={props.shortFilm} setSaved={props.setSaved} saved={props.saved} formDisabled={props.formDisabled} />
+                <Preloader preloader={props.preloader} />
+                <div className={`${props.nothingFound || props.moviesSearchError ? 'movies-error movies-error_active' : 'movies-error'}`}>
+                    {`${props.nothingFound ? nothingFound : props.moviesSearchError ? moviesSearchError : ''}`}
+
+                </div>
+                <MoviesCardList movies={props.movies} dimensions={props.dimensions} setSavedMovies={props.setSavedMovies}
+                    shortFilm={props.shortFilm} handleSaveClick={props.handleSaveClick}
+                    handleDeleteMovie={props.handleDeleteMovie} nothingFound={props.nothingFound}
+                    saved={props.saved} myMovies={props.myMovies} saveCard={props.saveCard}>
                 </MoviesCardList>
             </main>
             <Footer />

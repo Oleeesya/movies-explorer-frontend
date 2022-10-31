@@ -59,6 +59,12 @@
     border: none;
     background: none;
     padding: 0;
+    cursor: pointer;
+}
+
+.aboutMe__network:hover {
+    opacity: 0.7;
+    transition: 0.2s;
 }
 
 .aboutMe__network-title {

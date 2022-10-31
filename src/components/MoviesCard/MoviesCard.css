@@ -1,5 +1,8 @@
 .moviesCard {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .moviesCard__image {
@@ -7,6 +10,9 @@
     object-fit: cover;
     width: 100%;
     border-radius: 6px;
+
+    display: block;
+    height: 80%;
 }
 
 .moviesCard__image_hover:hover {
@@ -50,6 +56,12 @@
     background-image: url(../../images/save.svg);
     background-repeat: no-repeat;
     background-position: center;
+    cursor: pointer;
+}
+
+.moviesCard__saved_active:hover {
+    opacity: 0.8;
+    transition: 0.2s;
 }
 
 .moviesCard__remove {
@@ -107,6 +119,22 @@
 @media(max-width: 768px) {
     .moviesCard__description {
         margin-top: 25px;
+    }
+
+    .moviesCard__remove_mobile {
+        display: block;
+        position: absolute;
+        right: 14px;
+        top: 14px;
+        width: 21px;
+        height: 21px;
+        border-radius: 30px;
+        border: none;
+        background-image: url(../../images/remove.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: pointer;
+        transition: 0.2s;
     }
 }
 

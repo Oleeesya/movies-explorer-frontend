@@ -2,7 +2,21 @@
     box-sizing: border-box;
     margin: 0 auto;
     padding: 0;
-    background-color: #FAFAFA;
+}
+
+.movies-error {
+    margin: 70px auto 28px;
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    display: none;
+}
+
+.movies-error_active {
+    max-width: 80%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
 }
 
 @media(max-width: 768px) {
