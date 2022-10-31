@@ -100,6 +100,19 @@ function App() {
           setCurrentUser(userData);
         })
         .catch((err) => {
+          localStorage.removeItem('jwt');
+          localStorage.removeItem('userLogged');
+          localStorage.removeItem('mov');
+          localStorage.removeItem('title-mov');
+          localStorage.removeItem('toggle');
+          localStorage.removeItem('movies-from-yandex-api');
+          setMovies([]);
+
+          setShortFilm(false);
+          setToken('');
+          setloggedIn(false);
+          history.push('/');
+
           console.log(err);
         })
     }
@@ -118,10 +131,6 @@ function App() {
         })
     }
   }, [loggedIn])
-
-  useEffect(() => {
-    setMessageError("");
-  }, [window])
 
   useEffect(() => {
     tokenCheck();
