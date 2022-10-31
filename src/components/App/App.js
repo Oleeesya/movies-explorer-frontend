@@ -101,32 +101,7 @@ function App() {
         })
         .catch((err) => {
           console.log(err);
-
-          localStorage.removeItem('jwt');
-          localStorage.removeItem('userLogged');
-          localStorage.removeItem('mov');
-          localStorage.removeItem('title-mov');
-          localStorage.removeItem('toggle');
-          localStorage.removeItem('movies-from-yandex-api');
-          setMovies([])
-
-          setShortFilm(false);
-          setToken('');
-          setloggedIn(false);
-          history.push('/');
-
         })
-
-      if (!localStorage.getItem('movies-from-yandex-api')) {
-        moviesApi.handleMovies()
-          .then((res) => {
-            localStorage.setItem('movies-from-yandex-api', JSON.stringify(res))
-          })
-          .catch((err) => {
-            setMoviesSearchError(true);
-            console.log(err);
-          })
-      }
     }
   }, [loggedIn])
 
@@ -204,10 +179,8 @@ function App() {
     return true
   }
 
-  //ищем фильмы и сохраняем в localstorage
-  const handleSearchMovies = (title) => {
-
-    setPreloader(true);
+  //функция поиска фильмов
+  const searcMovies = (title) => {
     setNothingFound(false);
     setFormDisabled(true);
 
@@ -235,8 +208,29 @@ function App() {
         setNothingFound(true);
       }
     }
-    setPreloader(false);
     setFormDisabled(false);
+  }
+
+  //ищем фильмы и сохраняем в localstorage
+  const handleSearchMovies = (title) => {
+    if (!localStorage.getItem('movies-from-yandex-api')) {
+      setPreloader(true);
+      moviesApi.handleMovies()
+        .then((res) => {
+          localStorage.setItem('movies-from-yandex-api', JSON.stringify(res));
+        })
+        .catch((err) => {
+          setMoviesSearchError(true);
+          console.log(err);
+        })
+        .finally(() => {
+          setPreloader(false);
+          searcMovies(title);
+        })
+    }
+    else if (localStorage.getItem('movies-from-yandex-api')) {
+      searcMovies(title);
+    }
   }
 
   useEffect(() => {
